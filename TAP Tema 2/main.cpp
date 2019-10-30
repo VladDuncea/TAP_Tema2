@@ -93,13 +93,76 @@ void problema3_var1()
 
 #pragma region Problema 3 var 3
 
+vector<int> arr;
+
+int inv_count(int left, int right)
+{
+	if (right == left)
+		return 0;
+
+	int count = 0;
+
+	//Get the middle
+	int middle = (left + right) / 2;
+
+	//Sort the two subvectors
+	count += inv_count(left, middle);
+	count += inv_count(middle + 1, right);
+
+	vector<int> sorted;
+
+	int i = left, j = middle + 1;
+
+	while (i <= middle && j <= right)
+	{
+		if (arr[i] > arr[j])
+		{
+			//place in sorted corectly
+			sorted.push_back(arr[j]);
+			//increase inversion count
+			count += middle - i + 1;
+			j++;
+		}
+		else
+			sorted.push_back(arr[i++]);
+	}
+
+	//what remains
+	while (i <= middle)
+	{
+		sorted.push_back(arr[i++]);
+	}
+
+	while (j <= right)
+	{
+		sorted.push_back(arr[j++]);
+	}
+
+	int z = 0;
+	for (int k = left; k <= right; k++)
+		arr[k] = sorted[z++];
+
+	return count;
+}
+
 void problema3_var3()
 {
 	ifstream fin("date_2.in");
+	int n;
+	vector<int> arr;
+	//Read vect size
+	
+	fin >> n;
+	
+	for (int i = 0; i < n; ++i)
+	{
+		int x;
+		fin >> x;
+		arr.push_back(x);
+	}
 
-
+	cout << inv_count(0, arr.size() - 1);
 }
-
 #pragma endregion
 
 
