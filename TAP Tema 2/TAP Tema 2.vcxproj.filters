@@ -26,5 +26,8 @@
     <None Include="date_2.in">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="date_3.in">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -113,15 +113,27 @@ int inv_count(int left, int right)
 
 	int i = left, j = middle + 1;
 
+	//count significant inversions
+	while (i <= middle && j <= right)
+	{
+		if (arr[i] > arr[j] * 2)
+		{
+			//increase inversion count
+			count += middle - i + 1;
+			j++;
+		}
+		else
+			i++;
+	}
+
+	i = left;
+	j = middle + 1;
+	//merge data
 	while (i <= middle && j <= right)
 	{
 		if (arr[i] > arr[j])
 		{
-			//place in sorted corectly
-			sorted.push_back(arr[j]);
-			//increase inversion count
-			count += middle - i + 1;
-			j++;
+			sorted.push_back(arr[j++]);
 		}
 		else
 			sorted.push_back(arr[i++]);
@@ -149,7 +161,6 @@ void problema3_var3()
 {
 	ifstream fin("date_2.in");
 	int n;
-	vector<int> arr;
 	//Read vect size
 	
 	fin >> n;
@@ -165,10 +176,123 @@ void problema3_var3()
 }
 #pragma endregion
 
+#pragma region Problema 4 var 1
+
+struct Point
+{
+	long long x, y;
+};
+
+bool cmp(Point p1, Point p2) {
+	if(p1.x == p2.x)
+		return p1.y < p2.y;
+	return p1.x < p2.x;
+
+}
+
+long long distance(Point a, Point b)
+{
+	return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+}
+
+void merge_function(int st, int m, int dr, vector <Point>& v)
+{
+	int i = st, j = m + 1;
+	vector <Point> aux;
+
+	while (i <= m && j <= dr)
+	{
+		if (v[i].y < v[j].y)
+			aux.push_back(v[i++]);
+		else aux.push_back(v[j++]);
+	}
+
+	while (i <= m)
+		aux.push_back(v[i++]);
+	while (j <= dr)
+		aux.push_back(v[j++]);
+
+	int index = st;
+	for (Point a : aux)
+	{
+		v[index] = a;
+		index++;
+	}
+}
+
+long long divide(int st, int dr, vector <Point>& v)
+{
+	if (dr - st == 1)
+	{
+		long long minim = distance(v[st], v[dr]);
+		if (v[st].y > v[dr].y)   //sortam dupa ordonata
+			swap(v[st], v[dr]);
+
+		return minim;
+
+	}
+	else if (dr - st == 2)
+	{
+		//minimul in combinatii de cate 2
+		long long minim = min(distance(v[st], v[st + 1]), min(distance(v[st], v[dr]), distance(v[dr], v[st + 1])));
+
+		//sortare cele 3 puncte
+		if (v[st].y > v[st + 1].y)
+			swap(v[st], v[st + 1]);
+		merge_function(st, st + 1, dr, v);
+
+		return minim;
+	}
+	else
+	{
+		int m = (st + dr) / 2; //mijloc
+		long long mst = divide(st, m, v); //minim stanga
+		long long mdr = divide(m + 1, dr, v);	//minim dreapta
+
+		long long minim = min(mst, mdr);	//minim global
+		merge_function(st, m, dr, v);   //se sorteaza partea stanga si dreapta dupa ordonata
+
+		vector <Point> aux;
+		for (int i = st; i <= dr; i++)
+			if (abs(v[i].x - v[m].x) <= minim)   //punem intr-un vector punctele care se afla la distanta minim fata de dreapta imaginara verticala ce imparte partea stanga de cea dreapta
+				aux.push_back(v[i]);
+
+		int siz = aux.size();
+
+		for (int i = 0; i < siz - 1; i++)   //vedem daca exista o distanta intre doua pct mai mica decat minim cu un pct din dreapta si unul din stanga
+			for (int j = i + 1; j < siz && j <= i + 7; j++)	//ze 8 puncte magige idk some theorem
+				minim = min(minim, distance(aux[i], aux[j]));
+
+		return minim;
+
+	}
+}
+
+void problema4()
+{
+	ifstream fin("date_3.in");
+	
+	vector <Point> v;
+	int n;
+	fin >> n;
+	v.resize(n);
+
+	//citire vector de puncte
+	for (int i = 0; i < n; i++)
+		fin >> v[i].x >> v[i].y;
+	
+	//sortare vector
+	sort(v.begin(), v.end(), cmp);
+
+	cout << sqrt(divide(0, n - 1, v));
+	fin.close();
+}
+
+#pragma endregion
 
 
 int main()
 {
-	problema3_var3();
+	problema4();
 	return 0;
 }
