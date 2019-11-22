@@ -20,15 +20,28 @@ bool jobComparataor(Job s1, Job s2)
 	return (s1.finish < s2.finish);
 }
 
-//find last job that doesn't confilict with current job
-//TODO: this has to be logn
-int lastNonConflict(vector<Job> jobs, int i)
+//find last(by end time) job that doesn't confilict with current job
+int lastNonConflict(vector<Job> jobs, int poz)
 {
-	for (int j = i - 1; j >= 0; j--)
+	// Initialize 'lo' and 'hi'
+	int lo = 0, hi = poz - 1;
+
+	// basic binary search
+	while (lo <= hi)
 	{
-		if (jobs[j].finish <= jobs[i].start)
-			return j;
+		int mid = (lo + hi) / 2;
+		if (jobs[mid].finish <= jobs[poz].start)
+		{
+			if (jobs[mid + 1].finish <= jobs[poz].start)
+				lo = mid + 1;
+			else
+				return mid;
+		}
+		else
+			hi = mid - 1;
 	}
+
+	//not found
 	return -1;
 }
 
@@ -106,7 +119,6 @@ int problema5_var1()
 }
 
 #pragma endregion
-
 
 int main()
 {
