@@ -1,4 +1,4 @@
-#include <iostream> 
+﻿#include <iostream> 
 #include <fstream>
 #include <algorithm> 
 #include <vector>
@@ -95,7 +95,6 @@ int findMaxProfit(vector<Job> jobs, int nr)
 	return 0;
 }
 
-// Driver program 
 int problema5_var1()
 {
 	//open data file
@@ -120,8 +119,108 @@ int problema5_var1()
 
 #pragma endregion
 
+#pragma region Ex5_Var2
+
+//job data structure
+struct Job2
+{
+	int profit, deadline, duration,id;
+};
+
+// sort acordingly to deadline
+bool cmp(Job2 s1, Job2 s2)
+{
+	return (s1.deadline < s2.deadline);
+}
+
+void printData(vector<Job2> &jobs,vector<vector<int>> &data, int i, int t)
+{
+	if (i == 0)
+		return;
+	if (data[i][t] == data[i - 1][t])
+		printData(jobs,data,i - 1, t);
+	else
+	{
+		int min_t = min(t, jobs[i-1].deadline) - jobs[i-1].duration;
+		printData(jobs, data, i - 1, min_t);
+		cout << jobs[i-1].id << " ";
+	}
+		
+}	
+
+void findBestSchedule(vector<Job2> jobs, int nr)
+{
+	//get max deadline
+	int max_deadline = jobs[nr - 1].deadline;
+
+	//Place to store dinamic data
+	vector<vector<int>> data;
+	data.resize(nr + 1);
+	for (int i = 0; i <= nr; i++)
+		data[i].resize(max_deadline + 1);
+
+	//Initialize dinamic data
+	for (int i = 0; i <= max_deadline; i++)
+		data[0][i] = 0;
+
+	for (int i = 1; i <= nr; i++)
+	{
+		for (int t = 0; t <= max_deadline; t++)
+		{
+			//time at which time the job has to end 
+			int min_t = min(t, jobs[i-1].deadline) - jobs[i-1].duration;
+
+			//not enough time
+			if (min_t < 0)
+			{
+				data[i][t] = data[i - 1][t];
+			}
+			else
+			{
+				data[i][t] = max(data[i - 1][t], data[i - 1][min_t] + jobs[i - 1].profit);
+			}
+		}
+	}
+
+	cout << data[nr][max_deadline] << endl;
+	printData(jobs, data, nr, max_deadline);
+	
+
+}
+
+int problema5_var2()
+{
+	//open data file
+	ifstream fin("date_5_2.txt");
+
+	//Variables
+	int nr;
+	vector<Job2> jobs;
+
+	//read input
+	fin >> nr;
+	for (int i = 0; i < nr; i++)
+	{
+		Job2 read;
+		fin >> read.profit >> read.deadline >> read.duration;
+		read.id = i + 1;
+		jobs.push_back(read);
+	}
+
+	//Sort jobs after deadline
+	sort(jobs.begin(), jobs.end(), cmp);
+
+	//PD the shit out of the problem
+	findBestSchedule(jobs, nr);
+	return 0;
+}
+
+
+#pragma endregion
+
+
 int main()
 {
-	problema5_var1();
+	problema5_var2();
 	return 0;
 }
