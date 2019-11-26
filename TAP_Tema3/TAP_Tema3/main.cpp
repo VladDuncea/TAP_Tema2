@@ -2,6 +2,8 @@
 #include <fstream>
 #include <algorithm> 
 #include <vector>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -218,9 +220,82 @@ int problema5_var2()
 
 #pragma endregion
 
+#pragma region Ex4_Var1
+
+void printSol(vector<vector<int>>& data, int nr, int x)
+{
+	//finished
+	if (x == 0)
+		return;
+
+	printSol(data, nr - 1, x - data[nr][x - 1]);
+	cout << data[nr][x - 1] << " ";
+}
+
+int problema4_var1()
+{
+	ifstream fin("date4_1.txt");
+
+	//reading data
+	int n, k;
+	fin >> n >> k;
+	fin.get();
+	//create dinamic space for solving
+	vector<vector<int>> data(n);
+	for (int i = 0; i < n; i++)
+		data[i].resize(k, 0);
+
+	int x;
+	string line;
+	getline(fin, line);
+	//fin.get();
+	std::istringstream iss(line);
+
+	//read first vector
+	while (iss >> x)
+	{
+		if (x < k)
+			data[0][x-1] = x;
+	}
+
+	//go over vectors and compute data
+	for (int i = 1; i < n; i++)
+	{
+		getline(fin, line);
+		//fin.get();
+		std::istringstream iss(line);
+		//read until 0
+		while (iss >> x)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				int a = 0;
+				if (data[i - 1][j] != 0)
+				{
+					a= j + 1 + x;
+					if (a <= k)
+						data[i][a - 1] = x;
+				}
+			}
+		}
+	}
+
+	//no solution found
+	if (data[n-1][k-1] == 0)
+	{
+		cout << "Nu se poate calcula!" << endl;
+		return 0;
+	}
+	printSol(data, n - 1, k);
+	
+	return 0;
+}
+
+#pragma endregion
+
 
 int main()
 {
-	problema5_var2();
+	problema4_var1();
 	return 0;
 }

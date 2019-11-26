@@ -26,5 +26,8 @@
     <Text Include="date_5_2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="date4_1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
