@@ -293,9 +293,82 @@ int problema4_var1()
 
 #pragma endregion
 
+#pragma region Ex3_Var3
+
+void problema3_var3()
+{
+	ifstream fin("date_3_3.txt");
+
+	//reading data
+	int n, m;
+	fin >> n >> m;
+
+	//create matrixes for data and input
+	vector<vector<int>> matrix(n), data(n + 1);
+	for (int i = 0; i < n; i++)
+	{
+		matrix[i].resize(m);
+		data[i].resize(m + 1, 0);
+	}
+	data[n].resize(m + 1, 0);
+
+	//read matrix
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			fin >> matrix[i][j];
+		}
+	}
+
+	int maxx =0;
+	pair<int, int> coord;
+
+	//compute data
+	for (int i = n - 1; i >= 0; i--)
+	{
+		for (int j = m - 1; j >= 0; j--)
+		{	
+			int x;
+			//a square can begin here
+			if (matrix[i][j] == 0)
+			{
+				//max value
+				x = 1 + min(data[i][j + 1], data[i + 1][j]);
+				//decrease if on oposed diagonal is not 0
+				if (x > 1 && matrix[i + x - 1][j + x -1] != 0)
+					x--;
+				if (x > maxx)
+				{
+					maxx = x;
+					coord.first = i;
+					coord.second = j;
+				}
+
+				data[i][j] = x;
+			}
+			
+		}
+	}
+
+	cout << "maxim: " << maxx << endl;
+	cout << coord.first << " " << coord.second << endl;
+	int k;
+	fin >> k;
+	int count = 0;
+	for (int i = n - 1; i >= 0; i--)
+		for (int j = m - 1; j >= 0; j--)
+		{
+			if (data[i][j] >= k)
+				count+= data[i][j]-(k-1);
+		}
+	cout << count;
+}
+
+#pragma endregion
 
 int main()
 {
-	problema4_var1();
+	problema3_var3();
 	return 0;
 }

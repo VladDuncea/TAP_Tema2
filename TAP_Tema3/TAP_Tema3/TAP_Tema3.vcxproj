@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="date4_1.txt" />
+    <Text Include="date_3_3.txt" />
     <Text Include="date_5_1.txt" />
     <Text Include="date_5_2.txt" />
   </ItemGroup>
