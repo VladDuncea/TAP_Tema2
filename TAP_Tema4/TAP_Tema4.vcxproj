@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="date.in" />
+    <None Include="date4.in" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
