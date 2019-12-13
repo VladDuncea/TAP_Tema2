@@ -153,7 +153,6 @@ void problema1()
 
 #pragma endregion
 
-
 #pragma region BranchAndBound_HamiltonianCircuit
 
 class state

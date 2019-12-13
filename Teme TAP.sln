@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TAP_Tema3", "TAP_Tema3\TAP_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TAP_Tema4", "TAP_Tema4\TAP_Tema4.vcxproj", "{85FFBFB5-67B1-46CD-AC9E-07F325C4149D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneticAlgorithm", "GeneticAlgorithm\GeneticAlgorithm.vcxproj", "{CADA595B-628F-423F-85A4-C5158F78481E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{85FFBFB5-67B1-46CD-AC9E-07F325C4149D}.Release|x64.Build.0 = Release|x64
 		{85FFBFB5-67B1-46CD-AC9E-07F325C4149D}.Release|x86.ActiveCfg = Release|Win32
 		{85FFBFB5-67B1-46CD-AC9E-07F325C4149D}.Release|x86.Build.0 = Release|Win32
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Debug|x64.ActiveCfg = Debug|x64
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Debug|x64.Build.0 = Debug|x64
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Debug|x86.ActiveCfg = Debug|Win32
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Debug|x86.Build.0 = Debug|Win32
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Release|x64.ActiveCfg = Release|x64
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Release|x64.Build.0 = Release|x64
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Release|x86.ActiveCfg = Release|Win32
+		{CADA595B-628F-423F-85A4-C5158F78481E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
