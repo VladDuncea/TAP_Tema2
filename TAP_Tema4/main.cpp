@@ -38,10 +38,10 @@ void sat_solve(int k, list<clauza>& clauze, int n, vector<int>& sol)
 	//found solution
 	if (clauze.empty())
 	{
-		cout << "Solutie: " << endl;
+		std::cout << "Solutie: " << endl;
 		for (int i = 0; i < k - 1; i++)
 		{
-			cout << sol[i] << " ";
+			std::cout << sol[i] << " ";
 		}
 		exit(0);
 	}
@@ -172,21 +172,15 @@ public:
 		level = 1;
 	}
 
-	/*state(state& father)
-	{
-		this->cost = father.cost;
-		used = father.used;
-		level = father.level + 1;
-		last_node = -1;
-		this->father = &father;
-		matrix = father.matrix;
-	}*/
 };
 
-bool operator<(state a, state b)
+struct customCmp
 {
-	return a.cost > b.cost;
-}
+	bool operator()(const state* a, const state* b)
+	{
+		return a->cost > b->cost;
+	}
+};
 
 
 void print_sol(state* st)
@@ -195,15 +189,67 @@ void print_sol(state* st)
 		return;
 
 	print_sol(st->father);
-	cout <<st->last_node + 1 << " ";
+	std::cout <<st->last_node + 1 << " ";
+}
+
+int reduction(vector<vector<int>>& matrix)
+{
+	int n = matrix.size(),red = 0;
+	for (int i = 0; i < n; i++)
+	{
+		int min = -1;
+		for (int j = 0; j < n; j++)
+		{
+			if (matrix[i][j] != -1 && (matrix[i][j] < min || min == -1))
+			{
+				min = matrix[i][j];
+			}
+		}
+
+		//nothing to do
+		if (min <= 0)
+			continue;
+
+		red += min;
+		for (int j = 0; j < n; j++)
+		{
+			if (matrix[i][j] != -1)
+				matrix[i][j] -= min;
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		int min = -1;
+		for (int j = 0; j < n; j++)
+		{
+			if (matrix[j][i] != -1 && (matrix[j][i] < min || min == -1))
+			{
+				min = matrix[j][i];
+			}
+		}
+
+		//nothing to do
+		if (min <= 0)
+			continue;
+
+		red += min;
+		for (int j = 0; j < n; j++)
+		{
+			if (matrix[j][i] != -1)
+				matrix[j][i] -= min;
+		}
+	}
+
+	return red;
 }
 
 void problema4()
 {
-	priority_queue<state*> min_heap;
+	priority_queue<state*,vector<state*>, customCmp> min_heap;
 	ifstream fin("date4.in");
 	vector<vector<int>> matrix;
-	int n;
+	int n, red;
 	fin >> n;
 	matrix.resize(n);
 
@@ -216,7 +262,7 @@ void problema4()
 		{
 			int x;
 			if (i == j)
-				matrix[i][j] = 0;
+				matrix[i][j] = -1;
 			else
 			{
 				fin >> x;
@@ -225,11 +271,15 @@ void problema4()
 		}
 	}
 
+	//reduction
+	red = reduction(matrix);
+
 	vector<bool> used(n, 0);
 	used[0] = 1;
 	//add initial state to min_heap
 	state* initial_state = new state(used);
 	initial_state->matrix = matrix;
+	initial_state->cost = red;
 
 	min_heap.push(initial_state);
 
@@ -243,6 +293,13 @@ void problema4()
 		//take best state out
 		state* selected_state = min_heap.top();
 		min_heap.pop();
+
+		//poped bad node
+		if (selected_state->cost > best_sol&& best_sol != -1)
+		{
+			delete(selected_state);
+			continue;
+		}
 
 		//compute all of its children that can yield solutions and add them to min_heap
 		for (int i = 1; i < n; i++)
@@ -269,14 +326,27 @@ void problema4()
 			}
 			else
 			{
-				
+				//line i is -1
+				for (int j = 0; j < n; j++)
+					child->matrix[selected_state->last_node][j] = -1;
+
+				//column j is -1
+				for (int j = 0; j < n; j++)
+					child->matrix[j][i] = -1;
+
+				//dont go back
+				child->matrix[i][0] = -1;
+
+				//reduce matrix
+				child->cost += reduction(child->matrix);
+
 				//not last level node, we compute cost an insert it in min_heap
-				child->cost += child->matrix[selected_state->last_node][i];
+				child->cost += selected_state->matrix[selected_state->last_node][i];
 				
 				//check if child can make a better solution
 				if (child->cost >= best_sol && best_sol!=-1)
 				{
-					free(child);
+					delete(child);
 					continue;
 				}
 				
