@@ -35,12 +35,13 @@ public:
 	void compute_val_and_fitness(int min, double coef, double fitness(double))
 	{
 		//compute value
+		long long dataval=0;
 		for (int i = 0; i < data.size(); i++)
 		{
 			if (data[i])
-				value += pow(2, data.size() - (i + 1));
+				dataval += pow(2, data.size() - (i + 1));
 		}
-		value = coef * value + min;
+		value = coef * (double)dataval + min;
 
 		//compute fitness
 		this->fitness = fitness(value);
@@ -83,6 +84,29 @@ void print_cromozomes(vector<Cromozom>& cromozomes)
 		//print fitness
 		printf(" f= %.10lf\n", cromozomes[i].fitness);
 	}
+}
+double find_max(vector<Cromozom> cromozomes)
+{
+	double maxx = cromozomes[0].fitness;
+
+	for (int i = 1; i < cromozomes.size(); i++)
+	{
+		if (cromozomes[i].fitness > maxx)
+			maxx = cromozomes[i].fitness;
+	}
+
+	return maxx;
+}
+double find_avg(vector<Cromozom> cromozomes)
+{
+	double sum = 0;
+
+	for (int i = 0; i < cromozomes.size(); i++)
+	{
+		sum += cromozomes[i].fitness;
+	}
+
+	return sum / cromozomes.size();
 }
 
 vector<Cromozom> evolve(vector<Cromozom> &last_gen,double prob_crossover,double prob_mutate)
@@ -187,31 +211,6 @@ vector<Cromozom> evolve(vector<Cromozom> &last_gen,double prob_crossover,double 
 	}
 
 	return next_gen;
-}
-
-double find_max(vector<Cromozom> cromozomes)
-{
-	double maxx = cromozomes[0].fitness;
-
-	for (int i = 1; i < cromozomes.size(); i++)
-	{
-		if (cromozomes[i].fitness > maxx)
-			maxx = cromozomes[i].fitness;
-	}
-
-	return maxx;
-}
-
-double find_avg(vector<Cromozom> cromozomes)
-{
-	double sum =0;
-
-	for (int i = 0; i < cromozomes.size(); i++)
-	{
-		sum+=cromozomes[i].fitness;
-	}
-
-	return sum/ cromozomes.size();
 }
 
 int main()
